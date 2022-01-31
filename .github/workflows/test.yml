@@ -7,25 +7,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name : GITHUB CONTEXT
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: get commit message
-        run: |
-           echo ::set-env name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
-      - name: show commit message
-        run : echo $commitmsg
-
       - name: step1
-        if: contains( env.commitmsg , 'try' )
+        if: contains( ${{ github.event.head_commit.message }} , 'try' )
         run: echo hello
 
       - name: Test
         uses: jrzeszutek/cli-action@v1.2.1
         with:
-            command: $commitmsg
+            command: ${{ github.event.head_commit.message }}
 
 
 env:
