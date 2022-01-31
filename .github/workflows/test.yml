@@ -6,10 +6,12 @@ jobs:
   example:
     runs-on: ubuntu-latest
     steps:
-      - name: Execute for pull request comments only
+      - name: Execute cloudify command from comment
         if: ${{ github.event.issue.pull_request }}
-        run: echo ${{ github.event.comment.body }}
-
+        uses: jrzeszutek/cli-action@v1.2.1
+        with:
+          command: ${{ github.event.comment.body }}
+          set-output: false
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
