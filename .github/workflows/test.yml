@@ -6,7 +6,8 @@ jobs:
   example:
     runs-on: ubuntu-latest
     steps:
-      - name: Execute cloudify command from comment
+      - id: execute_command
+        name: Execute cloudify command from comment
         if: ${{ github.event.issue.pull_request }}
         uses: jrzeszutek/cli-action@v1.2.1
         with:
@@ -18,11 +19,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            This is a multi-line test comment
-            - With GitHub **Markdown** :sparkles:
-            - Created by [create-or-update-comment][1]
-
-            [1]: https://github.com/peter-evans/create-or-update-comment
+            ${{ steps.execute_command.outputs }}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
