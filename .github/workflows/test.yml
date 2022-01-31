@@ -7,9 +7,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: step1
-        if: contains( ${{ github.event.head_commit.message }} , 'try' )
-        run: echo hello
+      - name: show message
+        run: echo ${{ github.event.head_commit.message }}
 
       - name: Test
         uses: jrzeszutek/cli-action@v1.2.1
