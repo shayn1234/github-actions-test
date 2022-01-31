@@ -15,7 +15,7 @@ jobs:
           set-output: true
 
       - name: Create comment
-        run: echo ${{ toJSON(steps.execute_command.outputs) }}  
+        run: echo ${{ steps.execute_command.outputs.cli-output }}  
         # uses: peter-evans/create-or-update-comment@v1
         # with:
         #   issue-number: ${{ github.event.issue.number }}
