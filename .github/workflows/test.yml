@@ -13,16 +13,16 @@ jobs:
           command: ${{ github.event.comment.body }}
           set-output: false
 
-    - name: Create comment
-      uses: peter-evans/create-or-update-comment@v1
-      with:
-        issue-number: ${{ github.event.issue.number }}
-        body: |
-          This is a multi-line test comment
-          - With GitHub **Markdown** :sparkles:
-          - Created by [create-or-update-comment][1]
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            This is a multi-line test comment
+            - With GitHub **Markdown** :sparkles:
+            - Created by [create-or-update-comment][1]
 
-          [1]: https://github.com/peter-evans/create-or-update-comment
+            [1]: https://github.com/peter-evans/create-or-update-comment
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
