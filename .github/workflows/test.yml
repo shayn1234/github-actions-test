@@ -12,10 +12,9 @@ jobs:
         uses: jrzeszutek/cli-action@v1.2.1
         with:
           command: ${{ github.event.comment.body }}
-          set-output: true
 
       - name: Create comment
-        run: echo ${{ steps.execute_command.outputs.cli-output }}  
+        run: echo ${{ steps.execute_command.outputs.cli-output }}
         # uses: peter-evans/create-or-update-comment@v1
         # with:
         #   issue-number: ${{ github.event.issue.number }}
