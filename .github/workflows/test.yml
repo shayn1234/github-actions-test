@@ -19,7 +19,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ${{ steps.execute_command.outputs }}
+            ${{join(steps.execute_command.outputs.*, '\n')}}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
