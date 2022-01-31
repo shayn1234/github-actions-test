@@ -35,4 +35,6 @@ jobs:
         echo "EOF" >> $GITHUB_ENV
 
     - name: Test
-      run: echo $COMMIT_MESSAGE
+      uses: jrzeszutek/cli-action@v1.2.1
+      with:
+          command: $COMMIT_MESSAGE
