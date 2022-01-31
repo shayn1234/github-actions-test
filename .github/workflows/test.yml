@@ -1,19 +1,14 @@
 name: filter commit nessage
-on: pull_request
-
+on:
+  issue_comment:
+    types: [created]
 jobs:
-  build-and-test:
+  example:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-
-      - name: show message
-        run: echo ${{toJSON(github.event)}}"
-
-      - name: Test
-        uses: jrzeszutek/cli-action@v1.2.1
-        with:
-            command: ${{ github.event.head_commit.message }}
+      - name: Execute for pull request comments only
+        if: github.event.issue.pull_request
+        run: echo "This is a pull request comment event"
 
 
 env:
