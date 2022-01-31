@@ -14,7 +14,7 @@ jobs:
           command: ${{ github.event.comment.body }}
 
       - name: Create comment
-        run: echo ${{ steps.execute_command.outputs.cli-output }}
+        run: echo ${{ toJSON(steps.execute_command.outputs) }}
         # uses: peter-evans/create-or-update-comment@v1
         # with:
         #   issue-number: ${{ github.event.issue.number }}
