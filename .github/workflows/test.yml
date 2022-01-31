@@ -12,7 +12,7 @@ jobs:
         uses: jrzeszutek/cli-action@v1.2.1
         with:
           command: ${{ github.event.comment.body }}
-          set-output: false
+          set-output: true
 
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v1
