@@ -15,11 +15,12 @@ jobs:
           set-output: true
 
       - name: Create comment
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ${{ steps.execute_command.outputs.stdout }}  
+        run: echo ${{ steps.execute_command.outputs }}  
+        # uses: peter-evans/create-or-update-comment@v1
+        # with:
+        #   issue-number: ${{ github.event.issue.number }}
+        #   body: |
+        #     ${{ steps.execute_command.outputs.stdout }}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
