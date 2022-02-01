@@ -14,7 +14,7 @@ jobs:
           command: ${{ github.event.comment.body }}
 
       - name: Create comment
-        env: test
+        environment: 'test'
         # run: echo ${{ steps.execute_command.outputs.cli-output }}
         uses: peter-evans/create-or-update-comment@v1.4.5
         with:
