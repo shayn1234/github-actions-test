@@ -15,7 +15,7 @@ jobs:
 
       - id: format_output
         run: |
-          cli-output="${{ steps.execute_command.outputs.cli-output }}"
+          export cli-output="${{ steps.execute_command.outputs.cli-output }}"
           cli-output="${cli-output//'%'/'%25'}"
           cli-output="${cli-output//$'\n'/'%0A'}"
           cli-output="${cli-output//$'\r'/'%0D'}"
