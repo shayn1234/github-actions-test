@@ -14,12 +14,12 @@ jobs:
           command: ${{ github.event.comment.body }}
 
       - name: Create comment
-        run: echo ${{ steps.execute_command.outputs.cli-output }}
-        # uses: peter-evans/create-or-update-comment@v1
-        # with:
-        #   issue-number: ${{ github.event.issue.number }}
-        #   body: |
-        #     ${{ steps.execute_command.outputs.stdout }}
+        # run: echo ${{ steps.execute_command.outputs.cli-output }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ${{ steps.execute_command.outputs.cli-output }}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
