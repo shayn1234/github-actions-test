@@ -5,6 +5,7 @@ on:
 jobs:
   example:
     runs-on: ubuntu-latest
+    environment: 'test'
     steps:
       - id: execute_command
         name: Execute cloudify command from comment
@@ -14,7 +15,6 @@ jobs:
           command: ${{ github.event.comment.body }}
 
       - name: Create comment
-        environment: 'test'
         # run: echo ${{ steps.execute_command.outputs.cli-output }}
         uses: peter-evans/create-or-update-comment@v1.4.5
         with:
