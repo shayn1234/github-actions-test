@@ -15,7 +15,8 @@ jobs:
 
       - id: format_output
         run: |
-          cli-output="${steps.execute_command.outputs.cli-output//$'\n'/'%0A'}"
+          cli-output=${{steps.execute_command.outputs.cli-output}}
+          cli-output="${cli-output//$'\n'/'%0A'}"
           echo "::set-output name=cli-output::$cli-output"
 
       - name: Create comment
