@@ -18,9 +18,8 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1.4.5
         with:
           issue-number: ${{ github.event.issue.number }}
-          comment-author: 'Cloudify'
           body: |
-            ${{ steps.format_output.outputs.cli-output }}
+            ${{ steps.execute_command.outputs.cli-output }}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
