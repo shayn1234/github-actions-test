@@ -13,13 +13,19 @@ jobs:
         with:
           command: ${{ github.event.comment.body }}
 
+      - id: format_output
+        run: |
+          cli-output="${cli-output//$'\n'/'%0A'}"
+          echo "::set-output name=cli-output::$cli-output"
+
       - name: Create comment
         # run: echo ${{ steps.execute_command.outputs.cli-output }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
+          comment-author: 'Cloudify'
           body: |
-            ${{ steps.execute_command.outputs.cli-output }}
+            ${{ steps.format_output.outputs.cli-output }}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
