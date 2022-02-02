@@ -3,7 +3,7 @@ on:
   issue_comment:
     types: [created]
 jobs:
-  run-commmand:
+  run-command:
     runs-on: ubuntu-latest
     environment: 'test'
     steps:
