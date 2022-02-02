@@ -26,13 +26,31 @@ jobs:
           print ('::set-output name=cli-output::{0}'.format(cli_output))
 
 
-      - name: Create comment
-        # run: echo ${{ steps.execute_command.outputs.cli-output }}
-        uses: peter-evans/create-or-update-comment@v1.4.5
+      # - name: Create comment
+      #   # run: echo ${{ steps.execute_command.outputs.cli-output }}
+      #   uses: peter-evans/create-or-update-comment@v1.4.5
+      #   with:
+      #     issue-number: ${{ github.event.issue.number }}
+      #     body: |
+      #       ${{ steps.format_command.outputs.cli-output }}
+
+
+      - name: add comment
+        id: comment
+        uses: actions/github-script@v3
+        env:
+          COMMENT: "${{ steps.format_command.outputs.cli-output }}"
         with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ${{ steps.format_command.outputs.cli-output }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `${process.env.COMMENT}`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
