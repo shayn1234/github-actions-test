@@ -31,31 +31,26 @@ jobs:
         name: format command output
         shell: python
         run: |
+          import json
           cli_output = ${{steps.get_instance_id.outputs.cli-output}}
           cli_output = cli_output.decode()
-          print ('::set-output name=cli-output::{0}'.format(toJSON(cli_output)))
+          instance_id = json.loads(cli_output)['id']
+          print ('::set-output name=instance-id::{0}'.format(instance_id))
 
       - name: get cloud resource instane runtime properties
         id: get_node_instance_runtime
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
-          command: node-instances get ${{ fromJSON(steps.format_node_list.outputs.cli-output.id) }} --json
-
-      - id: format_node_get
-        name: format command output
-        shell: python
-        run: |
-          cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
-          cli_output = cli_output.decode()
-          print ('::set-output name=cli-output::{0}'.format(toJSON(cli_output)))
-
+          command: node-instances get ${{ steps.format_node_list.outputs.instance-id }} --json
 
       - name: get cloud resource plan runtime property
         shell: python
         run: |
-          cli_output = ${{fromJSON(steps.format_node_get.outputs.cli-output.plan)}}
+          import json
+          cli_output = ${{steps.format_node_get.outputs.cli-output}}
           cli_output = cli_output.decode()
-          print ('::set-output name=cli-output::{0}'.format(cli_output))
+          plan = json.loads(cli_output)['plan']
+          print ('::set-output name=plan::{0}'.format(plan))
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
