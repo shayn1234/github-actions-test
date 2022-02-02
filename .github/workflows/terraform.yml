@@ -17,19 +17,11 @@ jobs:
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
           command: deployments create  -b $DEP_BLUEPRINT_ID $DEP_DEPLOYMENT_ID
-      - name: execute plan
+      - name: execute install
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
-          command: executions start terraform_plan -d $DEP_DEPLOYMENT_ID
-  apply:
-    needs: plan
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - name: execute install deployment
-        uses: ahmadiesa-abu/cli-action@v1.0.0
-        with:
-          command: executions start install $DEP_DEPLOYMENT_ID
+          command: executions start install -d $DEP_DEPLOYMENT_ID
+
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
   DEP_DEPLOYMENT_ID: dep-${{ github.run_id }}
