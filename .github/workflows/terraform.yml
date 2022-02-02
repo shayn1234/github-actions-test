@@ -47,7 +47,7 @@ jobs:
         shell: python
         run: |
           import json
-          cli_output = ${{steps.format_node_get.outputs.cli-output}}
+          cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           cli_output = cli_output.decode()
           plan = json.loads(cli_output)['plan']
           print ('::set-output name=plan::{0}'.format(plan))
