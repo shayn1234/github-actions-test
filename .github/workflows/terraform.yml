@@ -1,0 +1,41 @@
+name: "Install or update EAAS"
+on:
+  push:
+    branches: [ develop/* ]
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Upload blueprint
+        id: upload-blueprint
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: blueprints upload terraform/blueprint.yaml -b $DEP_BLUEPRINT_ID
+      - name: create deployment
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: deployments create  -b $DEP_BLUEPRINT_ID $DEP_DEPLOYMENT_ID
+      - name: execute plan
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: executions start terraform_plan -d $DEP_DEPLOYMENT_ID
+  apply:
+    depends_on: plan
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - name: execute install
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: executions start install $DEP_DEPLOYMENT_ID
+env:
+  DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
+  DEP_DEPLOYMENT_ID: dep-${{ github.run_id }}
+  CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
+  CLOUDIFY_USERNAME: ${{ secrets.CLOUDIFY_USERNAME }}
+  CLOUDIFY_PASSWORD: ${{ secrets.CLOUDIFY_PASSWORD }}
+  CLOUDIFY_TENANT: default_tenant
+  CLOUDIFY_SSL: ${{ secrets.CLOUDIFY_SSL }}
+  CLOUDIFY_SSL_TRUST_ALL: ${{ secrets.CLOUDIFY_SSL_TRUST_ALL }}
