@@ -52,8 +52,7 @@ jobs:
           import json
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
-          print("terraform_plan {0}".format(json.dumps(plan, indent=4, sort_keys=True)))
-          print ('::set-output name=plan::{0}'.format(json.dumps(plan, indent=4, sort_keys=True)))
+          print ('::set-output name=plan::{0}'.format(json.dumps(plan, indent=4)))
 
       - name: add-plan-comment
         id: comment
