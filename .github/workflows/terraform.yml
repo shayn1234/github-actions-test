@@ -47,7 +47,7 @@ jobs:
         run: |
           import json
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
-          plan = json.loads(cli_output)['plan']
+          plan = json.loads(cli_output)['runtime_properties']['plan']
           print ('::set-output name=plan::{0}'.format(plan))
 
 env:
