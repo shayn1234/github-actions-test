@@ -48,7 +48,7 @@ jobs:
         run: |
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           cli_output = cli_output.decode()
-          cli_output = cli_output.replace('"','\"')
+          cli_output = cli_output.replace('"','\\"')
           print ('::set-output name=cli-output::{0}'.format(cli_output))
 
 
