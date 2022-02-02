@@ -33,8 +33,7 @@ jobs:
         run: |
           import json
           cli_output = ${{steps.get_instance_id.outputs.cli-output}}
-          cli_output = cli_output.decode()
-          instance_id = json.loads(cli_output)['id']
+          instance_id = json.loads(cli_output)[0]['id']
           print ('::set-output name=instance-id::{0}'.format(instance_id))
 
       - name: get cloud resource instane runtime properties
@@ -48,7 +47,6 @@ jobs:
         run: |
           import json
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
-          cli_output = cli_output.decode()
           plan = json.loads(cli_output)['plan']
           print ('::set-output name=plan::{0}'.format(plan))
 
