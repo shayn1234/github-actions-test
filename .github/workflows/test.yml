@@ -14,14 +14,14 @@ jobs:
         with:
           command: ${{ github.event.comment.body }}
 
-     - id: formatted_command
-       name: format command output
-       run: |
-         cli-output= $(echo ${{ steps.execute_command.outputs.cli-output }})
-         cli-output="${cli-output//'%'/'%25'}"
-         cli-output="${cli-output//$'\n'/'%0A'}"
-         cli-output="${cli-output//$'\r'/'%0D'}"
-         echo ::set-output name=cli-output::$cli-output
+      - id: formatted_command
+        name: format command output
+        run: |
+          cli-output= $(echo ${{ steps.execute_command.outputs.cli-output }})
+          cli-output="${cli-output//'%'/'%25'}"
+          cli-output="${cli-output//$'\n'/'%0A'}"
+          cli-output="${cli-output//$'\r'/'%0D'}"
+          echo ::set-output name=cli-output::$cli-output
 
 
       - name: Create comment
