@@ -39,7 +39,7 @@ jobs:
         id: get_node_instance_runtime
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
-          command: node-instance get ${{ fromJSON(steps.format_node_list.outputs.cli-output).id }} --json
+          command: node-instances get ${{ fromJSON(steps.format_node_list.outputs.cli-output.id) }} --json
 
       - id: format_node_get
         name: format command output
@@ -51,9 +51,11 @@ jobs:
 
 
       - name: get cloud resource plan runtime property
-        uses: ahmadiesa-abu/cli-action@v1.0.0
+        shell: python
         with:
-          command: ${{ fromJSON(steps.format_node_get.outputs.cli-output).plan }}
+          cli_output = ${{steps.format_node_get.outputs.cli-output}}
+          cli_output = cli_output.decode()
+          print ('::set-output name=cli-output::{0}'.format(cli_output))
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
