@@ -52,7 +52,7 @@ jobs:
           import json
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
-          print ('::set-output name=plan::{0}'.format(json.dumps(plan, sort_keys=True, indent=4)))
+          print ('::set-output name=plan::{0}'.format(plan))
 
       - name: add-plan-comment
         id: comment
