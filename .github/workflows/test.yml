@@ -18,7 +18,10 @@ jobs:
         name: format command output
         shell: python
         run: |
-          print ('::set-output name=cli-output::{0}'.format(${{steps.execute_command.outputs.cli-output}}))
+          cli-output = ${{steps.execute_command.outputs.cli-output}}
+          cli-output = cli-output.decode()
+          cli-output.replace('\n', '</br>')
+          print ('::set-output name=cli-output::{0}'.format(cli-output))
 
 
       - name: Create comment
