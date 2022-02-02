@@ -50,7 +50,7 @@ jobs:
           print ('::set-output name=cli-output::{0}'.format(cli_output))
 
 
-      - name: get cloud resource plan
+      - name: get cloud resource plan runtime property
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
           command: ${{ fromJSON(steps.format_node_get.outputs.cli-output).plan }}
