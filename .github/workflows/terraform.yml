@@ -26,15 +26,34 @@ jobs:
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
           command: node-instances list -d $DEP_DEPLOYMENT_ID -n cloud_resources --json
+
+      - id: format_node_list
+        name: format command output
+        shell: python
+        run: |
+          cli_output = ${{steps.get_instance_id.outputs.cli-output}}
+          cli_output = cli_output.decode()
+          print ('::set-output name=cli-output::{0}'.format(cli_output))
+
       - name: get cloud resource instane runtime properties
         id: get_node_instance_runtime
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
-          command: node-instance get ${{ fromJSON(steps.get_instance_id.outputs.cli-output).id }} --json
+          command: node-instance get ${{ fromJSON(steps.format_node_list.outputs.cli-output).id }} --json
+
+      - id: format_node_get
+        name: format command output
+        shell: python
+        run: |
+          cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
+          cli_output = cli_output.decode()
+          print ('::set-output name=cli-output::{0}'.format(cli_output))
+
+
       - name: get cloud resource plan
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
-          command: ${{ fromJSON(steps.get_node_instance_runtime.outputs.cli-output).plan }}
+          command: ${{ fromJSON(steps.format_node_get.outputs.cli-output).plan }}
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
