@@ -1,15 +1,38 @@
-name: filter commit nessage
+name: execute cloudify command from PR comment
 on:
   issue_comment:
     types: [created]
 jobs:
-  example:
+  run-commmand:
     runs-on: ubuntu-latest
+    environment: 'test'
     steps:
-      - name: Execute for pull request comments only
+      - id: execute_command
+        name: Execute cloudify command from comment
         if: ${{ github.event.issue.pull_request }}
-        run: echo "This is a pull request comment event"
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: ${{ github.event.comment.body }}
 
+      - id: format_command
+        name: format command output
+        shell: python
+        run: |
+          cli_output = ${{steps.execute_command.outputs.cli-output}}
+          cli_output = cli_output.decode()
+          cli_output = cli_output.replace('%','%25')
+          cli_output = cli_output.replace('\n','%0A')
+          cli_output = cli_output.replace('\r','%0D')
+          print ('::set-output name=cli-output::{0}'.format(cli_output))
+
+
+      - name: Create comment
+        # run: echo ${{ steps.execute_command.outputs.cli-output }}
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ${{ steps.format_command.outputs.cli-output }}
 
 env:
   CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
