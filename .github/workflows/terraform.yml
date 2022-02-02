@@ -21,6 +21,20 @@ jobs:
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
           command: executions start install -d $DEP_DEPLOYMENT_ID
+      - name: get cloud resource node instance id
+        id: get_instance_id
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: node-instances list -d $DEP_DEPLOYMENT_ID -n cloud_resources --json
+      - name: get cloud resource instane runtime properties
+        id: get_node_instance_runtime
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: node-instance get ${{ fromJSON(steps.get_instance_id.outputs.cli-output).id }}
+      - name: get cloud resource plan
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: ${{ fromJSON(steps.get_node_instance_runtime.outputs.cli-output).plan }}
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
