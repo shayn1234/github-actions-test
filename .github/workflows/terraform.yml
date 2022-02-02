@@ -52,8 +52,8 @@ jobs:
           import json
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
-          print("terraform_plan {0}".format(plan))
-          print ('::set-output name=plan::{0}'.format(plan))
+          print("terraform_plan {0}".format(json.dumps(plan, indent=4, sort_keys=True)))
+          print ('::set-output name=plan::{0}'.format(json.dumps(plan, indent=4, sort_keys=True)))
 
       - name: add-plan-comment
         id: comment
@@ -73,7 +73,7 @@ jobs:
             \`\`\`
 
             </details>
-            
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
             github.issues.createComment({
@@ -82,6 +82,25 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+
+        - name: uninstall-deployment
+          id: uninstall_deployment
+          uses: ahmadiesa-abu/cli-action@v1.0.0
+          with:
+            command: executions start uninstall -d $DEP_DEPLOYMENT_ID
+
+        - name: delete-deployment
+          id: delete_deployment
+          uses: ahmadiesa-abu/cli-action@v1.0.0
+          with:
+            command: deployments delete $DEP_DEPLOYMENT_ID
+
+
+        - name: delete-blueprint
+          id: delete_blueprint
+          uses: ahmadiesa-abu/cli-action@v1.0.0
+          with:
+            command: blueprints delete $DEP_BLUEPRINT_ID
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
