@@ -30,7 +30,7 @@ jobs:
         id: get_node_instance_runtime
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
-          command: node-instance get ${{ fromJSON(steps.get_instance_id.outputs.cli-output).id }}
+          command: node-instance get ${{ fromJSON(steps.get_instance_id.outputs.cli-output).id }} --json
       - name: get cloud resource plan
         uses: ahmadiesa-abu/cli-action@v1.0.0
         with:
