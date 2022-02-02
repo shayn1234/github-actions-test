@@ -83,7 +83,7 @@ node_templates:
           admin_key_public: { get_attribute: [agent_key, public_key_export] }
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure: {}
+        configure: tf.cloudify_tf.tasks.plan
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
