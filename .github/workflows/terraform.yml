@@ -52,7 +52,7 @@ jobs:
 
       - name: get cloud resource plan runtime property
         shell: python
-        with:
+        run: |
           cli_output = ${{steps.format_node_get.outputs.cli-output}}
           cli_output = cli_output.decode()
           print ('::set-output name=cli-output::{0}'.format(cli_output))
