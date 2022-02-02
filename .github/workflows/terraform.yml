@@ -53,11 +53,11 @@ jobs:
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
           print ('::set-output name=plan::{0}'.format(plan))
-      
+
       - name: add-plan-comment
         id: comment
         uses: actions/github-script@v3
-        if: ${{ github.event.issue.pull_request }}
+        if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.get_terraform_plan.outputs.plan }}"
         with:
@@ -82,24 +82,24 @@ jobs:
               body: output
             })
 
-        - name: uninstall-deployment
-          id: uninstall_deployment
-          uses: ahmadiesa-abu/cli-action@v1.0.0
-          with:
-            command: executions start uninstall -d $DEP_DEPLOYMENT_ID
+      - name: uninstall-deployment
+        id: uninstall_deployment
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: executions start uninstall -d $DEP_DEPLOYMENT_ID
 
-        - name: delete-deployment
-          id: delete_deployment
-          uses: ahmadiesa-abu/cli-action@v1.0.0
-          with:
-            command: deployments delete $DEP_DEPLOYMENT_ID
+      - name: delete-deployment
+        id: delete_deployment
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: deployments delete $DEP_DEPLOYMENT_ID
 
 
-        - name: delete-blueprint
-          id: delete_blueprint
-          uses: ahmadiesa-abu/cli-action@v1.0.0
-          with:
-            command: blueprints delete $DEP_BLUEPRINT_ID
+      - name: delete-blueprint
+        id: delete_blueprint
+        uses: ahmadiesa-abu/cli-action@v1.0.0
+        with:
+          command: blueprints delete $DEP_BLUEPRINT_ID
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
