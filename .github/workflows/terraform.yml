@@ -43,12 +43,36 @@ jobs:
           command: node-instances get ${{ steps.format_node_list.outputs.instance-id }} --json
 
       - name: get cloud resource plan runtime property
+        id: get_terraform_plan
         shell: python
         run: |
           import json
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
           print ('::set-output name=plan::{0}'.format(plan))
+
+      - name: add-plan-comment
+        id: comment
+        uses: actions/github-script@v3
+        env:
+          PLAN: "terraform\n${{ steps.get_terraform_plan.outputs.plan }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Plan \`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`${process.env.PLAN}\`\`\`
+
+            </details>`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
 env:
   DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
