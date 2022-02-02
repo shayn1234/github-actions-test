@@ -22,7 +22,7 @@ jobs:
         with:
           command: executions start terraform_plan -d $DEP_DEPLOYMENT_ID
   apply:
-    depends_on: plan
+    needs: plan
     runs-on: ubuntu-latest
     environment: test
     steps:
