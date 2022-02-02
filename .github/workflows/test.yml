@@ -20,6 +20,9 @@ jobs:
         run: |
           cli_output = ${{steps.execute_command.outputs.cli-output}}
           cli_output = cli_output.decode()
+          cli_output = cli_output.replace('%','%25')
+          cli_output = cli_output.replace('\n','%0A')
+          cli_output = cli_output.replace('\r','%0D')
           print ('::set-output name=cli-output::{0}'.format(cli_output))
 
 
