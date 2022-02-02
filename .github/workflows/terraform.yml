@@ -1,7 +1,10 @@
-name: "Install or update EAAS"
+name: "Execute Terraform Plan"
 on:
   push:
-    branches: [ develop/* ]
+    branches:
+      - main
+  pull_request:
+
 jobs:
   plan:
     runs-on: ubuntu-latest
