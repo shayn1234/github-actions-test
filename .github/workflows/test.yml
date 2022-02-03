@@ -22,7 +22,7 @@ jobs:
           cli_output = cli_output.replace('%','%25')
           cli_output = cli_output.replace('\n','%0A')
           cli_output = cli_output.replace('\r','%0D')
-          print ('::set-output name=cli-output::{0}'.format(cli_output))
+          print ('::set-output name=cli-output::{0}'.format(cli_output.encode('utf-8')))
 
 
       # - name: Create comment
