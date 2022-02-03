@@ -10,7 +10,7 @@ jobs:
       - id: execute_command
         name: Execute cloudify command from comment
         if: ${{ github.event.issue.pull_request }}
-        uses: ahmadiesa-abu/cli-action@v1.0.0
+        uses: ahmadiesa-abu/cli-action@v1.0.1
         with:
           command: ${{ github.event.comment.body }}
 
