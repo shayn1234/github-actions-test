@@ -43,8 +43,15 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `${process.env.COMMENT}`;
+            const output = `#### Command Result
 
+            <details><summary>Show Result</summary>
+
+            \`\`\`\n
+            ${process.env.COMMENT}
+            \`\`\`
+            </details>`;
+            
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
