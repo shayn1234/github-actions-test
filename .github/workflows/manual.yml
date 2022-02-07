@@ -8,13 +8,17 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      name:
+      blueprint_id:
         # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
+        description: 'Blueprint ID'
         # Default value if no value is explicitly provided
-        default: 'World'
+        default: ''
         # Input has to be provided for the workflow to run
         required: true
+        options:
+          - test1
+          - test2
+          - test3
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,3 +32,35 @@ jobs:
     # Runs a single command using the runners shell
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}"
+
+    - name: create deployment
+      uses: ahmadiesa-abu/cli-action@v1.0.1
+      with:
+        command: deployments create  -b ${{ github.event.inputs.blueprint_id }} test-from-gh
+    - name: execute install
+      uses: ahmadiesa-abu/cli-action@v1.0.1
+      with:
+        command: executions start install -d test-from-gh
+
+
+    - name: uninstall-deployment
+      id: uninstall_deployment
+      uses: ahmadiesa-abu/cli-action@v1.0.1
+      with:
+        command: executions start uninstall -d test-from-gh
+
+    - name: delete-deployment
+      id: delete_deployment
+      uses: ahmadiesa-abu/cli-action@v1.0.1
+      with:
+        command: deployments delete test-from-gh
+
+env:
+  DEP_BLUEPRINT_ID: bp-${{ github.run_id }}
+  DEP_DEPLOYMENT_ID: dep-${{ github.run_id }}
+  CLOUDIFY_HOST: ${{ secrets.CLOUDIFY_HOST }}
+  CLOUDIFY_USERNAME: ${{ secrets.CLOUDIFY_USERNAME }}
+  CLOUDIFY_PASSWORD: ${{ secrets.CLOUDIFY_PASSWORD }}
+  CLOUDIFY_TENANT: dev_tenant
+  CLOUDIFY_SSL: ${{ secrets.CLOUDIFY_SSL }}
+  CLOUDIFY_SSL_TRUST_ALL: ${{ secrets.CLOUDIFY_SSL_TRUST_ALL }}
