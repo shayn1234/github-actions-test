@@ -45,11 +45,10 @@ jobs:
         with:
           command: node-instances get ${{ steps.format_node_list.outputs.instance-id }} --json
 
-      - name: install terraform
+      - name: install json2hcl
         run: |
-          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-          sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-          sudo apt install terraform
+          curl -SsL https://github.com/kvz/json2hcl/releases/download/v0.0.6/json2hcl_v0.0.6_linux_amd64 \
+  | sudo tee /usr/local/bin/json2hcl > /dev/null && sudo chmod 755 /usr/local/bin/json2hcl
 
       - name: get cloud resource plan runtime property
         id: get_terraform_plan
@@ -72,7 +71,8 @@ jobs:
       - name: terraform show plan
         id: show_plan
         run:
-          pretty_plan = `terraform show -json ./terra_plan.json`
+          json2hcl < ./terra_plan.json > ./plan.tf
+          pretty_plan = `cat ./plan.tf`
           echo "::set-output name=plan::$pretty_plan"
 
       - name: add-plan-comment
