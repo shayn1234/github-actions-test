@@ -57,29 +57,18 @@ jobs:
 
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
-          #with open('terra_plan.json', 'w', encoding='utf-8') as f:
-          #    json.dump(plan, f, ensure_ascii=False, indent=4)
-
-
           plan = json.dumps(plan, indent=4)
           plan = plan.replace('%','%25')
           plan = plan.replace('\n','%0A')
           plan = plan.replace('\r','%0D')
           print ('::set-output name=plan::{0}'.format(plan))
 
-      - name: terraform show plan
-        id: show_plan
-        run:
-          json2hcl < ./terra_plan.json > ./plan.tf
-          pretty_plan = `cat ./plan.tf`
-          echo "::set-output name=plan::$pretty_plan"
-
       - name: add-plan-comment
         id: comment
         uses: actions/github-script@v3
         if: github.event_name == 'pull_request'
         env:
-          PLAN: "terraform\n${{ steps.show_plan.outputs.plan }}"
+          PLAN: "terraform\n${{ steps.get_terraform_plan.outputs.plan }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
