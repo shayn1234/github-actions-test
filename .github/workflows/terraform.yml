@@ -45,18 +45,35 @@ jobs:
         with:
           command: node-instances get ${{ steps.format_node_list.outputs.instance-id }} --json
 
+      - name: install terraplanfeed
+        run: |
+        python3 -m pip install terraplanfeed
+
       - name: get cloud resource plan runtime property
         id: get_terraform_plan
         shell: python
         run: |
           import json
+          from terraplanfeed.terraform import parsePlan
+          from terraplanfeed.stdout import generate_stdout
+
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
-          plan = json.dumps(plan, indent=4)
-          plan = plan.replace('%','%25')
-          plan = plan.replace('\n','%0A')
-          plan = plan.replace('\r','%0D')
-          print ('::set-output name=plan::{0}'.format(plan))
+          resources = parsePlan(plan)
+          pretty_plan = generate_stdout(resources, True)
+          pretty_plan = pretty_plan.replace('%','%25')
+          pretty_plan = pretty_plan.replace('\n','%0A')
+          pretty_plan = pretty_plan.replace('\r','%0D')
+          print ('::set-output name=plan::{0}'.format(pretty_plan))
+
+
+
+          #plan = json.dumps(plan, indent=4)
+          #plan = plan.replace('%','%25')
+          #plan = plan.replace('\n','%0A')
+          #plan = plan.replace('\r','%0D')
+          #print ('::set-output name=plan::{0}'.format(plan))
+
 
       - name: add-plan-comment
         id: comment
