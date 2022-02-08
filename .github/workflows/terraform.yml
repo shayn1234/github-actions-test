@@ -45,27 +45,22 @@ jobs:
         with:
           command: node-instances get ${{ steps.format_node_list.outputs.instance-id }} --json
 
-      - name: install terraplanfeed
+      - name: install terraform
         run: |
-          python3 -m pip install terraplanfeed
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt install terraform
 
       - name: get cloud resource plan runtime property
         id: get_terraform_plan
         shell: python
         run: |
           import json
-          from terraplanfeed.terraform import parsePlan
-          from terraplanfeed.stdout import parseChanges
 
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
-          resources = parsePlan(plan)
-          pretty_plan = parseChanges(resources, True)
-          pretty_plan = pretty_plan.replace('%','%25')
-          pretty_plan = pretty_plan.replace('\n','%0A')
-          pretty_plan = pretty_plan.replace('\r','%0D')
-          print ('::set-output name=plan::{0}'.format(pretty_plan))
-
+          with open('terra_plan.json', 'w', encoding='utf-8') as f:
+              json.dump(plan, f, ensure_ascii=False, indent=4)
 
 
           #plan = json.dumps(plan, indent=4)
@@ -74,13 +69,18 @@ jobs:
           #plan = plan.replace('\r','%0D')
           #print ('::set-output name=plan::{0}'.format(plan))
 
+      - name: terraform show plan
+        id: show_plan
+        run:
+          pretty_plan = `terraform show -json ./terra_plan.json`
+          echo "::set-output name=plan::$pretty_plan"
 
       - name: add-plan-comment
         id: comment
         uses: actions/github-script@v3
         if: github.event_name == 'pull_request'
         env:
-          PLAN: "terraform\n${{ steps.get_terraform_plan.outputs.plan }}"
+          PLAN: "terraform\n${{ steps.show_plan.outputs.plan }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
