@@ -47,7 +47,7 @@ jobs:
 
       - name: install terraplanfeed
         run: |
-        python3 -m pip install terraplanfeed
+          python3 -m pip install terraplanfeed
 
       - name: get cloud resource plan runtime property
         id: get_terraform_plan
