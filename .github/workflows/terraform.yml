@@ -1,8 +1,8 @@
 name: "Execute Terraform Plan"
 on:
-  push:
-    branches:
-      - develop/*
+  # push:
+  #   branches:
+  #     - develop/*
   pull_request:
 
 jobs:
@@ -55,12 +55,12 @@ jobs:
         run: |
           import json
           from terraplanfeed.terraform import parsePlan
-          from terraplanfeed.stdout import generate_stdout
+          from terraplanfeed.stdout import parseChanges
 
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
           resources = parsePlan(plan)
-          pretty_plan = generate_stdout(resources, True)
+          pretty_plan = parseChanges(resources, True)
           pretty_plan = pretty_plan.replace('%','%25')
           pretty_plan = pretty_plan.replace('\n','%0A')
           pretty_plan = pretty_plan.replace('\r','%0D')
