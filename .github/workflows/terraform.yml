@@ -1,8 +1,8 @@
 name: "Execute Terraform Plan"
 on:
-  push:
-    branches:
-      - develop/*
+  # push:
+  #   branches:
+  #     - develop/*
   pull_request:
 
 jobs:
@@ -45,11 +45,16 @@ jobs:
         with:
           command: node-instances get ${{ steps.format_node_list.outputs.instance-id }} --json
 
+      - name: install json2hcl
+        run: |
+          curl -SsL https://github.com/kvz/json2hcl/releases/download/v0.0.6/json2hcl_v0.0.6_linux_amd64 | sudo tee /usr/local/bin/json2hcl > /dev/null && sudo chmod 755 /usr/local/bin/json2hcl
+
       - name: get cloud resource plan runtime property
         id: get_terraform_plan
         shell: python
         run: |
           import json
+
           cli_output = ${{steps.get_node_instance_runtime.outputs.cli-output}}
           plan = json.loads(cli_output)['runtime_properties']['plan']
           plan = json.dumps(plan, indent=4)

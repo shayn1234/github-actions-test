@@ -75,8 +75,8 @@ node_templates:
         source_path: { get_input: source_path }
         variables:
           env_name: { get_input: env_name }
-          access_key: { get_secret: aws_access_key_id }
-          secret_key: { get_secret: aws_secret_access_key }
+          access_key: { get_secret: AWS_ACCESS_KEY_ID }
+          secret_key: { get_secret: AWS_SECRET_ACCESS_KEY }
           aws_region: { get_input: aws_region_name }
           aws_zone: { concat: [ { get_input: aws_region_name }, 'a' ] }
           admin_user: { get_input: agent_user }
